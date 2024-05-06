@@ -56,6 +56,26 @@ if(isset($_SESSION['Reg'])){
         $consulta = mysqli_query($con, $sql) or die("Fallo en la consulta");
         
     }
+
+    if(isset($_POST['del_sala'])){//Eliminar sala
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $del_sala = "DELETE FROM salas WHERE id = $id";
+        $consulta = mysqli_query ($con ,$del_sala)
+        or die ("Fallo en la eliminacion");
+    }
+
+    if(isset($_POST['del_pelicula'])){//Eliminar pelicula
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $del_sala = "DELETE FROM peliculas WHERE id = $id";
+        $consulta = mysqli_query ($con ,$del_sala)
+        or die ("Fallo en la eliminacion");
+    }
+    if(isset($_POST['del_funcion'])){//Eliminar funcion
+        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $del_sala = "DELETE FROM funciones WHERE id = $id";
+        $consulta = mysqli_query ($con ,$del_sala)
+        or die ("Fallo en la eliminacion");
+    }
     
     $sql = 'SELECT * FROM administradores';
     $result = $con->query($sql);      
@@ -127,7 +147,7 @@ if(isset($_SESSION['Reg'])){
             <TD>
             <form action="index.php" method="post">
                 <input type="hidden" name="id" value=<?php echo $registro_sala['id']?>>
-                <input type="submit" name="del" value="DEL">
+                <input type="submit" name="del_sala" value="DEL">
             </form>
             </TD>
         </TR>
@@ -188,7 +208,7 @@ if(isset($_SESSION['Reg'])){
                 <TD>
                 <form action="index.php" method="post">
                     <input type="hidden" name="id" value=<?php echo $registro_pelicula['id']?>>
-                    <input type="submit" name="del" value="DEL">
+                    <input type="submit" name="del_pelicula" value="DEL">
                 </form>
                 </TD>
             </TR>
@@ -253,7 +273,7 @@ if(isset($_SESSION['Reg'])){
                 <TD>
                 <form action="index.php" method="post">
                     <input type="hidden" name="id" value=<?php echo $registro_funcion['id']?>>
-                    <input type="submit" name="del" value="DEL">
+                    <input type="submit" name="del_funcion" value="DEL">
                 </form>
                 </TD>
             </TR>
