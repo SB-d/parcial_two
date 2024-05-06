@@ -3,6 +3,12 @@ session_start();
 if(isset($_SESSION['Reg'])){
 	if($_SESSION['Reg']=='ok'){
 
+
+        if(isset($_POST['logout'])){
+            $_SESSION['Reg']='fail';
+            header('Location: login.php');
+        }
+
 ?>
 
 <!DOCTYPE html>
@@ -13,6 +19,10 @@ if(isset($_SESSION['Reg'])){
     <title>Document</title>
 </head>
 <body>
+<form action="index.php" method="post">
+                <input type="submit" name="logout" value="Cerrar sesion">
+            </form>
+        
     <h1>    Administradores</h1>
 <?php
     $con = new mysqli("localhost", "root", "", "cinedb");
