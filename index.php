@@ -32,7 +32,7 @@ if(isset($_SESSION['Reg'])){
         or die ("Fallo en la consulta");
     }
 
-    if(isset($_POST['add_pelicula'])){//Agrega sala
+    if(isset($_POST['add_pelicula'])){//Agrega pelicula
         $nombre = $_POST['nombre'] ?? ''; 
         $codigo = $_POST['codigo'] ?? '';
         $clasificacion = $_POST['clasificacion'] ?? '';
@@ -41,6 +41,20 @@ if(isset($_SESSION['Reg'])){
 			  "VALUES ('$nombre', '$codigo', '$clasificacion')";
         $consulta = mysqli_query ($con,$sql)
         or die ("Fallo en la consulta");
+    }
+
+    if(isset($_POST['add_funcion'])){//Agrega funcion
+        $codigo = isset($_POST['codigo']) ? $_POST['codigo'] : '';
+        $sala_id = isset($_POST['sala_id']) ? $_POST['sala_id'] : '';
+        $pelicula_id = isset($_POST['pelicula_id']) ? $_POST['pelicula_id'] : '';
+        $fecha_hora = isset($_POST['fecha_hora']) ? $_POST['fecha_hora'] : '';
+
+        $fecha_hora = date('Y-m-d H:i:s', strtotime($fecha_hora));
+
+        $sql ="INSERT INTO funciones (codigo_funcion, fecha_hora, sala_id, pelicula_id) ".
+            "VALUES ('$codigo', '$fecha_hora', '$sala_id', '$pelicula_id')";
+        $consulta = mysqli_query($con, $sql) or die("Fallo en la consulta");
+        
     }
     
     $sql = 'SELECT * FROM administradores';
@@ -182,8 +196,71 @@ if(isset($_SESSION['Reg'])){
 }
 ?>
     </TABLE>
-    
 
+<hr>
+<br>
+
+<h1>Funciones</h1>
+
+<form method ="POST" action="index.php">
+    <label for="codigo">Codigo de funcion:</label>
+    <input type="number" name="codigo" value="" required>
+    <label for="fecha_hora">Fecha y hora:</label>
+    <input type="datetime-local" name="fecha_hora" >
+    <label for="pelicula_id">Pelicula:</label>
+    <select name="pelicula_id" id="pelicula_id">
+        <option>-- selecciona --</option>
+        <?php foreach ($arr_pelicula as $registro_pelicula) { ?>
+        <option value="<?php echo $registro_pelicula['id']?>"><?php echo $registro_pelicula['nombre']?></option>
+        <?php }?>
+    </select>
+    <label for="sala_id">Sala:</label>
+    <select name="sala_id" id="sala_id">
+        <option>-- selecciona --</option>
+        <?php foreach ($arr_sala as $registro_sala) { ?>
+        <option value="<?php echo $registro_sala['id']?>"><?php echo $registro_sala['nombre']?></option>
+        <?php }?>
+    </select>
+    <button name="add_funcion">añadir pelicula</button>
+</form> 
+
+<br>
+
+<TABLE BORDER>
+        <TR>
+            <TD>Codigo</TD>
+            <TD>Hora de funcion</TD>
+            <TD>Pelicula</TD>
+            <TD>Sala</TD>
+            <TD>Acciones</TD>
+        </TR>
+        <?php
+    
+            $sql_funcion = 'SELECT * FROM funciones';
+            $result_funcion = $con->query($sql_funcion);      
+            $arr_funcion = array();
+            while ($fil_funcion = $result_funcion->fetch_assoc()) {
+                $arr_funcion[] = $fil_funcion;
+            }
+
+            foreach ($arr_funcion as $registro_funcion) {
+        ?>
+            <TR>
+                <TD><?php echo $registro_funcion['codigo_funcion']?></TD> 
+                <TD><?php echo $registro_funcion['fecha_hora']?> </TD>
+                <TD><?php echo $registro_funcion['pelicula_id']?></TD> 
+                <TD><?php echo $registro_funcion['sala_id']?> </TD>
+                <TD>
+                <form action="index.php" method="post">
+                    <input type="hidden" name="id" value=<?php echo $registro_funcion['id']?>>
+                    <input type="submit" name="del" value="DEL">
+                </form>
+                </TD>
+            </TR>
+        <?PHP
+}
+?>
+    </TABLE>
 
 <?php
 }else{
